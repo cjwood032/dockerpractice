@@ -8,7 +8,11 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 80
+#ENV PORT=80
+
+ ARG DEFAULT_PORT=80
+#EXPOSE $PORT
+EXPOSE $DEFAULT_PORT
 
 #VOLUME ["/app/node_modules"]
 
@@ -32,3 +36,10 @@ CMD ["node", "server.js"]
 #we fix it below, -v /app/node_modules works the same as VOLUME ["/app/node_modules"]
 
 #docker run -p 3000:80 -d --name feedback-app -v /app/node_modules -v feedback:/app/feedback -v $(pwd):/app --rm feedback-nodes; 
+# -v /app/node_modules this stops the npm files from being overwritten when we don't have it locally
+
+
+#if we add :ro to the volume, it will make it read only -v $(pwd):/app:ro
+
+#setting environment variables 
+#docker run -p 3000:80 -d --rm --env PORT=80 --name feedback-app -v /app/node_modules -v feedback:/app/feedback -v $(pwd):/app feedback-nodes:env 
