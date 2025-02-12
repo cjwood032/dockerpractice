@@ -1,0 +1,6 @@
+Runs mongo
+docker run --name mongodb --rm -d -p 27017:27017 mongo
+
+Build backend
+docker build -t goals-node .
+docker run --name goals
