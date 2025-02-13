@@ -4,3 +4,17 @@ docker run --name mongodb --rm -d -p 27017:27017 mongo
 Build backend
 docker build -t goals-node .
 docker run --name goals
+
+Build Frontend
+#docker build -t goals-react .
+#docker run --name goals-frontend --rm -it -d -p 3000:3000 goals-react
+
+Add Networking
+#docker network create goals-net
+
+Remove ports, update app.js BE (FE will not work) to loook for mongo(rebuild backend)
+FE won't work because the browser runs the code, not in docker
+docker network create goals-net
+docker run --name mongodb --rm -d --network goals-net mongo
+docker run --name goals-backend --rm -d --network goals-net -p 80:80 goals-node
+docker run --name goals-frontend --rm -it -d -p 3000:3000 -it goals-react
