@@ -12,7 +12,7 @@ Build Frontend
 Add Networking
 #docker network create goals-net
 
-R emove ports, update app.js BE (FE will not work) to loook for mongo(rebuild backend)
+Remove ports, update app.js BE (FE will not work) to loook for mongo(rebuild backend)
 FE won't work because the browser runs the code, not in docker
 docker network create goals-net
 docker run --name mongodb --rm -d --network goals-net mongo
@@ -27,3 +27,6 @@ docker run --name mongodb --rm -d -v data:/data/db --network goals-net -e MONGO_
 
 bind logs add in -v logs:/app/logs
 docker run --name goals-backend --rm -v $(pwd)/:/app -v logs:/app/logs -v /app/node_modules -e MONGODB_USERNAME=max --network goals-net -p 80:80 goals-node
+
+update frontend to use bind mounts and track code changes
+docker run -v $(pwd)/src:/app/src --name goals-frontend --rm -it -d -p 3000:3000 -it goals-react
