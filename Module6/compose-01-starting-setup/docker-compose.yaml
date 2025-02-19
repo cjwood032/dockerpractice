@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  mongodb:
+    ##image: that can be a name, internal reference, or external link to an image.
+    image: "mongo"
+    volumes:
+      - data:/data/db
+    #environment:
+    # MONGO_INITDB_ROOT_USERNAME: max #this form doesn't need a dash
+    #- MONGO_INITDB_ROOT_USERNAME=max
+    #- MONGO_INITDB_ROOT_PASSWORD=secret
+    env_file:
+      - ./env/mongo.env
+    #networks:  #we would only need this if we wanted to run a specific network, otherwise it automatically named based on the folder
+    #- goals-net
+
+  backend:
+    build: ./backend
+    ports:
+      - "80:80"
+    volumes:
+      - logs:/app/logs
+      - ./backend:/app #bind mounts do not need to be copied to volumes
+      - /app/node_modules #anonymous volumes do not need to be copied to volumes
+    env_file:
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on:
+      - backend
+
+#any named volumes need to be listed here
+#shared names will be reused.
+volumes:
+  data:
+  logs:
+#docker-compose up #starts the compose, can add -d and similar
+#docker-compose down # deletes containers/images, add -v to also remove volumes
